@@ -17,9 +17,6 @@ UPDATE_PATH="${SCRIPTS_PATH}/update"
 
 # 日志文件
 LOG_FILE="${TMP_PATH}/module.log"
-# host 文件
-HOSTS_FILE="${MODULE_PATH}/etc/hosts"
-
 # 用户
 SAM_USER="root"
 # 用户组"
@@ -32,13 +29,6 @@ SMARTDNS_BIN="smartdns"
 SMARTDNS_PATH="${MODULE_PATH}/etc/SmartDNS"
 # SmartDNS 配置
 SMARTDNS_CONF="${SMARTDNS_PATH}/${SMARTDNS_BIN}.conf"
-
-# AdGuardHome 路径
-AGH_BIN="AdGuardHome"
-# AdGuardHome 路径
-AGH_PATH="${MODULE_PATH}/etc/AdGuardHome"
-# AdGuardHome 配置
-AGH_CONF="${AGH_PATH}/${AGH_BIN}.yaml"
 
 # Mihomo 路径
 MIHOMO_BIN="mihomo"

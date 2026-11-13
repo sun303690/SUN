@@ -5,7 +5,7 @@ out_content=""
 
 start_service="🟢已运行: "
 stop_service="🔴已停止: "
-services=(${SMARTDNS_BIN} ${AGH_BIN} ${MIHOMO_BIN})
+services=(${SMARTDNS_BIN} ${MIHOMO_BIN})
 for i in ${services[@]}
 do
     isRun ${i} && {
@@ -29,10 +29,7 @@ fi
 
 out_content+=" 📊监控: "
 isRun "${INOTIFY_PATH}/module.sh" && out_content+="[模块✅]" || out_content+="[模块❌]"
-isRun "${INOTIFY_PATH}/host.sh" && out_content+="[Hosts✅]" || out_content+="[Hosts❌]"
 
-out_content+=" 🌐Host: "
-[ ${HOST_ENABLE} = true ] && out_content+="[已启用]" || out_content+="[已禁用]"
 out_content+=" ⏰定时: "
 [ ${CRONTAB_ENABLE} = true ] && out_content+="[已启用]" || out_content+="[已禁用]"
 

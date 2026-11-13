@@ -8,14 +8,8 @@ content=$(cat "${MIHOMO_PATH}/base.yaml")
 SMARTDNS_PORT=$(cat ${SMARTDNS_CONF} | grep "bind" | sed -n "s/bind.*:\(.*\)/\1/p")
 
 # DNS 端口
-if [ ${MODULE_DNS_MODE} = 1 ] && [ ${SMARTDNS_ENABLE} = true ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
+if [ ${SMARTDNS_ENABLE} = true ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
     DNS_PORT=${SMARTDNS_PORT}
-elif [ ${MODULE_DNS_MODE} = 2 ] && [ ${AGH_ENABLE} = true ] && [ $(isRun ${AGH_BIN} "pid") ]; then
-    DNS_PORT=${AGH_DNS_PORT}
-elif [ ${SMARTDNS_ENABLE} = true ] && [ ${AGH_ENABLE} = false ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
-    DNS_PORT=${SMARTDNS_PORT}
-elif [ ${SMARTDNS_ENABLE} = false ] && [ ${AGH_ENABLE} = true ] && [ $(isRun ${AGH_BIN} "pid") ]; then
-    DNS_PORT=${AGH_DNS_PORT}
 fi
 
 # 修改订阅配置
@@ -75,8 +69,8 @@ modify_dns(){
         line=$(echo "${content}" | sed -n "/- system/=" | sed -n "1p")
         # 获取前缀
         prefix=$(echo "${content}" | sed -n "${line}p" | sed -e "s/-.*/- /g" -e "s/ /$(placeholder 1)/g")
-        # 判断 AdGuardHome 启用，则使用 AdGuardHome dns，未启用则使用默认 dns
-        if [ ${AGH_ENABLE} = true -o ${SMARTDNS_ENABLE} = true ] && [ "${DNS_PORT}" ]; then
+        # 判断 SmartDNS 启用，则使用 SmartDNS dns，未启用则使用默认 dns
+        if [ ${SMARTDNS_ENABLE} = true ] && [ "${DNS_PORT}" ]; then
             content=$(echo "${content}" | sed "${line}c ${prefix}127.0.0.1:${DNS_PORT}" | sed "s/$(placeholder 1)/ /g")
         else
             # 获取默认 DNS
@@ -87,8 +81,8 @@ modify_dns(){
         echo "${content}" > ${MIHOMO_CONF}
         let "index++"        
     done
-    if [ ${AGH_ENABLE} = true -o ${SMARTDNS_ENABLE} = true ] && [ "${DNS_PORT}" ]; then
-        [ ${DNS_PORT} = ${AGH_DNS_PORT} ] && log "i" "${MIHOMO_BIN} 使用 ${AGH_BIN} DNS" || log "i" "${MIHOMO_BIN} 使用 ${SMARTDNS_BIN} DNS"
+    if [ ${SMARTDNS_ENABLE} = true ] && [ "${DNS_PORT}" ]; then
+        log "i" "${MIHOMO_BIN} 使用 ${SMARTDNS_BIN} DNS"
     else
         log "i" "${MIHOMO_BIN} 使用默认 DNS"
     fi

@@ -10,8 +10,6 @@ is_update=false
 
 # SmartDNS 版本
 smartdns_ver=$(cd ${SMARTDNS_PATH} && SMARTDNS_WORKDIR="${SMARTDNS_PATH}" exec ${SMARTDNS_BIN} -v | sed -n 's/^.*[[:space:]]\(.*\)[[:space:]].*/\1/p')
-# AdGuardHome 版本
-agh_ver=$(${AGH_BIN} --version | sed -n 's/^.*version[[:space:]]\(.*\)$/\1/p')
 # Mihomo 版本
 mihomo_ver=$(${MIHOMO_BIN} -v | sed -n "s/^.*Meta[[:space:]]\(.*\)[[:space:]]android.*$/\1/p")
 
@@ -86,27 +84,6 @@ smartdns_download(){
     is_update=true
 }
 
-# AdGuardHome 下载
-agh_download(){
-    log "i" "更新 AdGuardHome"
-    get_download_url "AdguardTeam/AdGuardHome" "linux_arm64" 1 ${agh_ver} || return 1
-    log "i" "开始下载，请稍等..."
-    download_file || {
-        return 1
-        log "e" "下载失败"
-    }
-    log "i" "解压缩 > ${save_file}"
-    tar -zxvf ${save_file} -C ${TMP_PATH} && rm -rf ${save_file}
-    # 替换文件
-    replace_file "${TMP_PATH}/${AGH_BIN}/${AGH_BIN}" "${BIN_PATH}/${AGH_BIN}"
-    log "i" "修改权限"
-    chmod 755 "${BIN_PATH}/${AGH_BIN}"
-    chown "${SAM_USER}:${DNS_GROUP}" "${BIN_PATH}/${AGH_BIN}"
-    log "i" "删除下载文件"
-    rm -rf "${TMP_PATH}/${AGH_BIN}"
-    is_update=true
-}
-
 # Mihomo 下载
 mihomo_download(){
     log "i" "更新 Mihomo "
@@ -139,7 +116,6 @@ mihomo_download(){
 
 log "i" "update >>>"
 mihomo_download
-agh_download
 smartdns_download
 log "i" "<<< update"
 

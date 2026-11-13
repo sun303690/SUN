@@ -22,7 +22,7 @@ do
     # 判断黑名单为空，和服务未启动，则启动服务并且退出监控
     if [ ${#BLACKLIST_WIFI[@]} -eq 0 ]; then
         run_number=$(
-pgrep -f $MIHOMO_BIN $SMARTDNS_BIN $AGH_BIN | wc -l)
+pgrep -f $MIHOMO_BIN $SMARTDNS_BIN | wc -l)
         [ $run_number -le 0 ] && $SCRIPTS_PATH/service.sh start
         exit 0
     fi
@@ -36,7 +36,7 @@ pgrep -f $MIHOMO_BIN $SMARTDNS_BIN $AGH_BIN | wc -l)
     do
         # 运行服务数量
         run_number=$(
-pgrep -f $MIHOMO_BIN $SMARTDNS_BIN $AGH_BIN | wc -l)
+pgrep -f $MIHOMO_BIN $SMARTDNS_BIN | wc -l)
         # 判断当前所连接WIFI是否在黑名单
         if [ "$(get_WIFI_SSID)" = "${BLACKLIST_WIFI[$i]}" ]; then
             state=0

@@ -37,18 +37,6 @@ sed  -i "6c description=模块未启动" "${MODULE_PATH}/module.prop"
 # 监控模块
 inotifyd "${INOTIFY_PATH}/module.sh" ${MODULE_PATH} &
 
-# 判断 host 启用则执行
-grep -q "HOST_ENABLE=true" "${SETTING_FILE}" && {
-    # 模块 hosts 文件路径
-    HOSTS_FILE="${MODULE_PATH}/etc/hosts"
-    # 系统 hosts 文件路径
-    SYSTEM_HOSTS="/system/etc/hosts"
-    # 挂载 hosts 文件
-    mount -o bind "${HOSTS_FILE}" "${SYSTEM_HOSTS}"
-    # 监控 hosts 文件
-    inotifyd "${INOTIFY_PATH}/host.sh" ${HOSTS_FILE} &
-}
-
 # 获取WIFI黑名单
 BLACKLIST_WIFI=($(cat "${MODULE_PATH}/setting.conf" | grep "BLACKLIST_WIFI=" | sed -e 's/BLACKLIST_WIFI=(//g' -e 's/)$//g'))
 # 判断黑名单不为空，则启动监听

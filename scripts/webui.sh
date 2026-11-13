@@ -3,11 +3,8 @@ source "/data/adb/modules/SAM/scripts/base.sh"
 
 # 获取已启用服务的数量
 get_service_number(){
-    number=3
+    number=2
     if [ ${SMARTDNS_ENABLE} = false ]; then
-        number=$((number - 1))
-    fi
-    if [ ${AGH_ENABLE} = false ]; then
         number=$((number - 1))
     fi
     if [ ${MIHOMO_ENABLE} = false ]; then
@@ -18,14 +15,8 @@ get_service_number(){
 
 # 获取进程数量
 get_process_number(){
-    pids=($(pgrep -f "${SMARTDNS_BIN}" -f "${AGH_BIN}" -f "${MIHOMO_BIN}"))
+    pids=($(pgrep -f "${SMARTDNS_BIN}" -f "${MIHOMO_BIN}"))
     echo ${#pids[@]}
-}
-
-# 获取挂载状态
-get_mount_status(){
-    status=$(mount | grep "/system/etc/hosts")
-    [ "${status}" ] && echo "已挂载" || echo "未挂载"
 }
 
 # 获取监控
@@ -38,11 +29,6 @@ get_monitor_status(){
 get_monitor_pid(){
     pid=$(pgrep -f "${SCRIPTS_PATH}/wifi.monitor.sh")
     if [ ${1} = "wifi" ]; then
-        echo ${pid}
-        return
-    fi
-    pid=$(pgrep -f "${INOTIFY_PATH}/host.sh")
-    if [ ${1} = "host" ]; then
         echo ${pid}
         return
     fi
@@ -66,8 +52,6 @@ start_monitor(){
     pid=$(get_monitor_pid ${1})
     if [ $1 = "wifi" ] && [ -z "${pid}" ]; then
         ${SCRIPTS_PATH}/wifi.monitor.sh > /dev/null 2>&1 &
-    elif [ ${1} = "host" ] && [ -z "${pid}" ]; then
-        inotifyd "${INOTIFY_PATH}/host.sh" "${HOSTS_FILE}" &
     elif [ -z "$pid" ]; then
         inotifyd "${INOTIFY_PATH}/module.sh" "${MODULE_PATH}" &
     fi    
@@ -86,9 +70,6 @@ case "$1" in
     process)
         get_process_number
         ;;
-    mount)
-        get_mount_status
-        ;;
     monitor)
         get_monitor_status ${2}
         ;;
@@ -102,7 +83,7 @@ case "$1" in
         kill_monitor ${2}
         ;;
     *)
-        echo "使用: status(服务状态) | service(服务数量) | process(进程数量) | mount(挂载状态) | monitor(监控状态) | pid(监控pid) | start(启动监控) | kill(杀死监控)"
+        echo "使用: status(服务状态) | service(服务数量) | process(进程数量) | monitor(监控状态) | pid(监控pid) | start(启动监控) | kill(杀死监控)"
         exit 1
         ;;
 esac

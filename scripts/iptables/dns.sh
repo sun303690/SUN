@@ -11,16 +11,10 @@ BLOCK_IPV6_CHAIN="BLOCK_IPV6_DNS"
 SMARTDNS_PORT=$(cat ${SMARTDNS_CONF} | grep "bind" | sed -n "s/bind.*:\(.*\)/\1/p")
 
 # DNS 端口
-if [ ${MODULE_DNS_MODE} = 1 ] && [ ${AGH_ENABLE} = true ] && [ $(isRun ${AGH_BIN} "pid") ]; then
-    log "i" "使用 ${AGH_BIN} DNS"
-    DNS_PORT=${AGH_DNS_PORT}
-elif [ ${MIHOMO_ENABLE} = false ] && [ ${AGH_ENABLE} = true ] && [ $(isRun ${AGH_BIN} "pid") ]; then
-    log "i" "使用 ${AGH_BIN} DNS"
-    DNS_PORT=${AGH_DNS_PORT}
-elif [ ${MODULE_DNS_MODE} = 2 ] && [ ${MIHOMO_ENABLE} = true ] && [ $(isRun ${MIHOMO_BIN} "pid") ]; then
+if [ ${MIHOMO_ENABLE} = true ] && [ $(isRun ${MIHOMO_BIN} "pid") ]; then
     log "i" "使用 ${MIHOMO_BIN} DNS"
     DNS_PORT=${MIHOMO_DNS_PORT}
-elif [ ${MODULE_DNS_MODE} = false ] && [ ${AGH_ENABLE} = false ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
+elif [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
     log "i" "使用 ${SMARTDNS_BIN} DNS"
     DNS_PORT=${SMARTDNS_PORT}
 fi
