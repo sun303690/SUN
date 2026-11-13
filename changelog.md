@@ -1,3 +1,8 @@
+# 2026.11.13
+- 移除 AdGuardHome（二进制、配置、服务脚本、升级下载、WebUI 服务卡）
+- 移除 hosts 功能（开机挂载、inotify 监听、更新脚本、WebUI 挂载页与定时任务）
+- 服务结构收敛为 `SmartDNS > Mihomo`
+
 # 2026.09.07
 - Mihomo 配置添加 `虚拟组网` 的代理组，筛选名称带有 `ZeroTier | EasyTier` 的节点
 - 增加 ZeroTier 和 EasyTier 相关代码配置
